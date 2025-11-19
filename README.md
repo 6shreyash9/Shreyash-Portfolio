@@ -2,7 +2,7 @@
 
 > High-performance portfolio showcasing full-stack development, AI/ML projects, and modern web technologies.
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://your-portfolio-url.com)
+[![Live Demo](https://shreyash-portfolio-five.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-6shreyash9-blue)](https://github.com/6shreyash9)
 
 ## ✨ Features
@@ -48,4 +48,5 @@ CSE student and full-stack developer passionate about building high-performance 
 - **GitHub:** [@6shreyash9](https://github.com/6shreyash9)
 
 ## 🚀 Quick Start
+
 
