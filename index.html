@@ -1598,7 +1598,14 @@
         fetchGitHubStats();
 
         // ── GSAP ScrollTrigger Animations ─────────────────────────────
+        // Debug: Check if GSAP is loaded
+        console.log('GSAP version:', gsap.version);
+        console.log('ScrollTrigger available:', typeof ScrollTrigger !== 'undefined');
+        
         gsap.registerPlugin(ScrollTrigger);
+        
+        // Debug: Test simple GSAP animation
+        gsap.to("body", {duration: 0.1, opacity: 1});
 
         // ── UTILITY: safe batch selector ──
         function animBatch(selector, vars) {
@@ -1656,7 +1663,7 @@
                 x: 80, opacity: 0, duration: 0.9, delay: 0.2, ease: 'power3.out'
             });
 
-            // parallax the image on scroll
+            // parallax image on scroll
             gsap.to('#about .aspect-square img', {
                 yPercent: -10,
                 scrollTrigger: { trigger: aboutSection, start: 'top bottom', end: 'bottom top', scrub: 1 }
