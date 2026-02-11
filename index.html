@@ -1503,27 +1503,10 @@
 
                 </div>
             </div>
-
-            <div>
-                <h3 class="font-bold text-neo-orange mb-4 border-b border-gray-700 pb-2">AUDIO_THEME</h3>
-                <div class="flex flex-col gap-2">
-                    <button id="audio-toggle" 
-                        class="bg-black border-2 border-white px-4 py-2 font-mono text-sm hover:bg-neo-orange hover:text-black transition-all cursor-hover flex items-center gap-2">
-                        <i class="ri-volume-up-line" id="audio-icon"></i>
-                        <span id="audio-text">SOUND ON</span>
-                    </button>
-                    <div class="flex items-center gap-2">
-                        <span class="font-mono text-xs">VOL</span>
-                        <input type="range" id="volume-slider" min="0" max="100" value="30" 
-                            class="flex-1 h-2 bg-black border border-white cursor-pointer">
-                        <span id="volume-value" class="font-mono text-xs">30%</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="text-center mt-16 pt-8 border-t border-gray-800 text-gray-500 text-sm">
-            <p> 2025 Shreyash.exe // SYSTEM_END</p>
+            <p>© 2025 Shreyash.exe // SYSTEM_END</p>
         </div>
 
         <div
@@ -2297,47 +2280,16 @@
             });
         })();
 
-        // ── 21. ENHANCED SYNTHESIZED AUDIO UI ──
+        // ── 21. SYNTHESIZED AUDIO UI ──
         (function audioUI() {
             // Audio Context singleton
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             if (!AudioContext) return;
 
             const ctx = new AudioContext();
-            let audioEnabled = true;
-            let masterVolume = 0.3;
-
-            // Theme sound oscillator for ambient background
-            let themeOscillator = null;
-            let themeGain = null;
-
-            // Initialize theme sound
-            function initThemeSound() {
-                if (themeOscillator) {
-                    themeOscillator.stop();
-                    themeOscillator.disconnect();
-                }
-
-                themeOscillator = ctx.createOscillator();
-                themeGain = ctx.createGain();
-                
-                themeOscillator.connect(themeGain);
-                themeGain.connect(ctx.destination);
-                
-                // Create a subtle ambient drone
-                themeOscillator.type = 'sine';
-                themeOscillator.frequency.setValueAtTime(55, ctx.currentTime); // Low A note
-                themeGain.gain.setValueAtTime(0, ctx.currentTime);
-                themeGain.gain.linearRampToValueAtTime(masterVolume * 0.1, ctx.currentTime + 2); // Fade in
-                
-                themeOscillator.start();
-            }
 
             function playTone(type) {
-                if (!audioEnabled || ctx.state === 'suspended') {
-                    if (ctx.state === 'suspended') ctx.resume();
-                    if (!audioEnabled) return;
-                }
+                if (ctx.state === 'suspended') ctx.resume();
 
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
@@ -2352,7 +2304,7 @@
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(800, now);
                     osc.frequency.exponentialRampToValueAtTime(1200, now + 0.05);
-                    gain.gain.setValueAtTime(masterVolume * 0.15, now);
+                    gain.gain.setValueAtTime(0.05, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                     osc.start(now);
                     osc.stop(now + 0.05);
@@ -2361,61 +2313,11 @@
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(300, now);
                     osc.frequency.exponentialRampToValueAtTime(50, now + 0.1);
-                    gain.gain.setValueAtTime(masterVolume * 0.3, now);
+                    gain.gain.setValueAtTime(0.1, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
                     osc.start(now);
                     osc.stop(now + 0.1);
-                } else if (type === 'boot') {
-                    // Startup sequence
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(220, now);
-                    osc.frequency.exponentialRampToValueAtTime(440, now + 0.2);
-                    gain.gain.setValueAtTime(masterVolume * 0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                    osc.start(now);
-                    osc.stop(now + 0.3);
                 }
-            }
-
-            // Audio controls
-            const audioToggle = document.getElementById('audio-toggle');
-            const audioIcon = document.getElementById('audio-icon');
-            const audioText = document.getElementById('audio-text');
-            const volumeSlider = document.getElementById('volume-slider');
-            const volumeValue = document.getElementById('volume-value');
-
-            if (audioToggle) {
-                audioToggle.addEventListener('click', () => {
-                    audioEnabled = !audioEnabled;
-                    
-                    if (audioEnabled) {
-                        audioIcon.className = 'ri-volume-up-line';
-                        audioText.textContent = 'SOUND ON';
-                        audioToggle.classList.remove('bg-neo-red', 'text-white');
-                        audioToggle.classList.add('bg-black', 'text-white');
-                        initThemeSound();
-                        playTone('boot');
-                    } else {
-                        audioIcon.className = 'ri-volume-mute-line';
-                        audioText.textContent = 'SOUND OFF';
-                        audioToggle.classList.remove('bg-black', 'text-white');
-                        audioToggle.classList.add('bg-neo-red', 'text-white');
-                        if (themeOscillator) {
-                            themeGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
-                        }
-                    }
-                });
-            }
-
-            if (volumeSlider) {
-                volumeSlider.addEventListener('input', (e) => {
-                    masterVolume = e.target.value / 100;
-                    volumeValue.textContent = `${e.target.value}%`;
-                    
-                    if (themeGain && audioEnabled) {
-                        themeGain.gain.setValueAtTime(masterVolume * 0.1, ctx.currentTime);
-                    }
-                });
             }
 
             // Attach to interactive elements
@@ -2424,24 +2326,12 @@
                 el.addEventListener('click', () => playTone('click'));
             });
 
-            // Initial boot sound and theme
-            setTimeout(() => {
-                if (audioEnabled) {
-                    initThemeSound();
-                    playTone('boot');
-                }
-            }, 1000);
-
-            // Handle page visibility to pause/resume theme
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden && themeOscillator && audioEnabled) {
-                    themeGain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
-                } else if (!document.hidden && themeOscillator && audioEnabled) {
-                    themeGain.gain.linearRampToValueAtTime(masterVolume * 0.1, ctx.currentTime + 0.2);
-                }
-            });
+            // Initial boot sound
+            setTimeout(() => playTone('hover'), 1000);
         })();
 
     </script>
 </body>
+
+
 </html>
